@@ -1,0 +1,157 @@
+version: '2.2'
+services:
+  es_master_01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    container_name: es_master_01
+    environment:
+      - node.name=es_master_01
+      - node.roles=master
+      - cluster.name=es-docker-cluster_01
+      - discovery.seed_hosts=es_master_01,es_master_02,es_master_03
+      - cluster.initial_master_nodes=es_master_01,es_master_02,es_master_03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms192m -Xmx192m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es_master_01_data:/usr/share/elasticsearch/data
+    networks:
+      - es-docker-cluster_01
+    logging:
+      driver: local
+  es_master_02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    container_name: es_master_02
+    environment:
+      - node.name=es_master_02
+      - node.roles=master
+      - cluster.name=es-docker-cluster_01
+      - discovery.seed_hosts=es_master_01,es_master_02,es_master_03
+      - cluster.initial_master_nodes=es_master_01,es_master_02,es_master_03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms192m -Xmx192m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es_master_02_data:/usr/share/elasticsearch/data
+    networks:
+      - es-docker-cluster_01
+  es_master_03:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    container_name: es_master_03
+    environment:
+      - node.name=es_master_03
+      - node.roles=master
+      - cluster.name=es-docker-cluster_01
+      - discovery.seed_hosts=es_master_01,es_master_02,es_master_03
+      - cluster.initial_master_nodes=es_master_01,es_master_02,es_master_03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms192m -Xmx192m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es_master_03_data:/usr/share/elasticsearch/data
+    networks:
+      - es-docker-cluster_01
+  es_data_01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    container_name: es_data_01
+    ports:
+      - 9120:9200
+    environment:
+      - node.name=es_data_01
+      - node.roles=data
+      - cluster.name=es-docker-cluster_01
+      - discovery.seed_hosts=es_master_01,es_master_02,es_master_03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es_data_01_data:/usr/share/elasticsearch/data
+    networks:
+      - es-docker-cluster_01
+  es_data_02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    container_name: es_data_02
+    ports:
+      - 9220:9200
+    environment:
+      - node.name=es_data_02
+      - node.roles=data
+      - cluster.name=es-docker-cluster_01
+      - discovery.seed_hosts=es_master_01,es_master_02,es_master_03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es_data_02_data:/usr/share/elasticsearch/data
+    networks:
+      - es-docker-cluster_01
+
+  # cerebro
+  lmenezes_cerebro:
+    image: lmenezes/cerebro
+    ports:
+      - 9000:9000
+    volumes:
+      - ./cerebro/conf/application.conf:/opt/cerebro/conf/application.conf
+    networks:
+      - es-docker-cluster_01
+
+  # kibana
+  es_coordinating_node_01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    container_name: es_coordinating_node_01
+    environment:
+      - node.name=es_coordinating_node_01
+      - cluster.name=es-docker-cluster_01
+      - discovery.seed_hosts=es_master_01,es_master_02,es_master_03
+      - network.host=0.0.0.0
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es_coordinating_node_01_data:/usr/share/elasticsearch/data
+      - ./elasticsearch_coordinating.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    networks:
+      - es-docker-cluster_01
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.2
+    ports:
+      - 15601:5601
+    environment:
+      SERVER_NAME: kibana_es_cluster_docker
+      ELASTICSEARCH_HOSTS: '["http://es_coordinating_node_01:9200"]'
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - es-docker-cluster_01
+
+
+volumes:
+  es_master_01_data:
+  es_master_02_data:
+  es_master_03_data:
+  es_data_01_data:
+  es_data_02_data:
+  es_coordinating_node_01_data:
+
+networks:
+  es-docker-cluster_01:
