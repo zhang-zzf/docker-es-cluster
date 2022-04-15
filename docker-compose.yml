@@ -77,7 +77,6 @@ services:
         hard: -1
     volumes:
       - es_data_01_data:/usr/share/elasticsearch/data
-      - ./elasticsearch/plugins/ik:/usr/share/elasticsearch/plugins/ik
     networks:
       - es-docker-cluster_01
   es_data_02:
@@ -98,7 +97,6 @@ services:
         hard: -1
     volumes:
       - es_data_02_data:/usr/share/elasticsearch/data
-      - ./elasticsearch/plugins/ik:/usr/share/elasticsearch/plugins/ik
     networks:
       - es-docker-cluster_01
 
