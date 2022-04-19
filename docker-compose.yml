@@ -60,7 +60,7 @@ services:
     networks:
       - es-docker-cluster_01
   es_data_01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    image: zhanfengzhang/elasticsearch:7.10.2-ik
     container_name: es_data_01
     ports:
       - 9120:9200
@@ -80,7 +80,7 @@ services:
     networks:
       - es-docker-cluster_01
   es_data_02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    image: zhanfengzhang/elasticsearch:7.10.2-ik
     container_name: es_data_02
     ports:
       - 9220:9200
@@ -99,6 +99,46 @@ services:
       - es_data_02_data:/usr/share/elasticsearch/data
     networks:
       - es-docker-cluster_01
+  es_data_03:
+    image: zhanfengzhang/elasticsearch:7.10.2-ik
+    container_name: es_data_03
+    ports:
+      - 9320:9200
+    environment:
+      - node.name=es_data_03
+      - node.roles=data
+      - cluster.name=es-docker-cluster_01
+      - discovery.seed_hosts=es_master_01,es_master_02,es_master_03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es_data_03_data:/usr/share/elasticsearch/data
+    networks:
+      - es-docker-cluster_01
+  # es_data_04:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+  #   container_name: es_data_04
+  #   ports:
+  #     - 9420:9200
+  #   environment:
+  #     - node.name=es_data_04
+  #     - node.roles=data
+  #     - cluster.name=es-docker-cluster_01
+  #     - discovery.seed_hosts=es_master_01,es_master_02,es_master_03
+  #     - bootstrap.memory_lock=true
+  #     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+  #   ulimits:
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #   volumes:
+  #     - es_data_04_data:/usr/share/elasticsearch/data
+  #   networks:
+  #     - es-docker-cluster_01
 
   # cerebro
   lmenezes_cerebro:
@@ -114,6 +154,8 @@ services:
   es_coordinating_node_01:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
     container_name: es_coordinating_node_01
+    ports:
+      - 9200:9200
     environment:
       - node.name=es_coordinating_node_01
       - cluster.name=es-docker-cluster_01
@@ -127,7 +169,7 @@ services:
         hard: -1
     volumes:
       - es_coordinating_node_01_data:/usr/share/elasticsearch/data
-      - ./elasticsearch/config/elasticsearch_coordinating.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./elasticsearch/config/elasticsearch_ingest.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     networks:
       - es-docker-cluster_01
   kibana:
@@ -151,6 +193,8 @@ volumes:
   es_master_03_data:
   es_data_01_data:
   es_data_02_data:
+  es_data_03_data:
+  es_data_04_data:
   es_coordinating_node_01_data:
 
 networks:
