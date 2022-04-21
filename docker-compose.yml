@@ -169,7 +169,7 @@ services:
         hard: -1
     volumes:
       - es_coordinating_node_01_data:/usr/share/elasticsearch/data
-      - ./elasticsearch/config/elasticsearch_ingest.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./elasticsearch/config/elasticsearch_coordinating.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     networks:
       - es-docker-cluster_01
   kibana:
