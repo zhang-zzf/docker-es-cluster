@@ -16,7 +16,9 @@ services:
         soft: -1
         hard: -1
     volumes:
+      - ./elasticsearch/config/log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
       - es_master_01_data:/usr/share/elasticsearch/data
+      - es_master_01_logs:/usr/share/elasticsearch/logs
     networks:
       - es-docker-cluster_01
     logging:
@@ -37,7 +39,9 @@ services:
         soft: -1
         hard: -1
     volumes:
+      - ./elasticsearch/config/log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
       - es_master_02_data:/usr/share/elasticsearch/data
+      - es_master_02_logs:/usr/share/elasticsearch/logs
     networks:
       - es-docker-cluster_01
   es_master_03:
@@ -56,7 +60,9 @@ services:
         soft: -1
         hard: -1
     volumes:
+      - ./elasticsearch/config/log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
       - es_master_03_data:/usr/share/elasticsearch/data
+      - es_master_03_logs:/usr/share/elasticsearch/logs
     networks:
       - es-docker-cluster_01
   es_data_01:
@@ -66,7 +72,7 @@ services:
       - 9120:9200
     environment:
       - node.name=es_data_01
-      - node.roles=data
+      - node.roles=data,ingest
       - cluster.name=es-docker-cluster_01
       - discovery.seed_hosts=es_master_01,es_master_02,es_master_03
       - bootstrap.memory_lock=true
@@ -76,7 +82,9 @@ services:
         soft: -1
         hard: -1
     volumes:
+      - ./elasticsearch/config/log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
       - es_data_01_data:/usr/share/elasticsearch/data
+      - es_data_01_logs:/usr/share/elasticsearch/logs
     networks:
       - es-docker-cluster_01
   es_data_02:
@@ -86,7 +94,7 @@ services:
       - 9220:9200
     environment:
       - node.name=es_data_02
-      - node.roles=data
+      - node.roles=data,ingest
       - cluster.name=es-docker-cluster_01
       - discovery.seed_hosts=es_master_01,es_master_02,es_master_03
       - bootstrap.memory_lock=true
@@ -96,7 +104,9 @@ services:
         soft: -1
         hard: -1
     volumes:
+      - ./elasticsearch/config/log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
       - es_data_02_data:/usr/share/elasticsearch/data
+      - es_data_02_logs:/usr/share/elasticsearch/logs
     networks:
       - es-docker-cluster_01
   es_data_03:
@@ -106,7 +116,7 @@ services:
       - 9320:9200
     environment:
       - node.name=es_data_03
-      - node.roles=data
+      - node.roles=data,ingest
       - cluster.name=es-docker-cluster_01
       - discovery.seed_hosts=es_master_01,es_master_02,es_master_03
       - bootstrap.memory_lock=true
@@ -116,7 +126,9 @@ services:
         soft: -1
         hard: -1
     volumes:
+      - ./elasticsearch/config/log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
       - es_data_03_data:/usr/share/elasticsearch/data
+      - es_data_03_logs:/usr/share/elasticsearch/logs
     networks:
       - es-docker-cluster_01
   # es_data_04:
@@ -168,8 +180,10 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - es_coordinating_node_01_data:/usr/share/elasticsearch/data
       - ./elasticsearch/config/elasticsearch_coordinating.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./elasticsearch/config/log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
+      - es_coordinating_node_01_data:/usr/share/elasticsearch/data
+      - es_coordinating_node_01_logs:/usr/share/elasticsearch/logs
     networks:
       - es-docker-cluster_01
   kibana:
@@ -189,13 +203,21 @@ services:
 
 volumes:
   es_master_01_data:
+  es_master_01_logs:
   es_master_02_data:
+  es_master_02_logs:
   es_master_03_data:
+  es_master_03_logs:
   es_data_01_data:
+  es_data_01_logs:
   es_data_02_data:
+  es_data_02_logs:
   es_data_03_data:
+  es_data_03_logs:
   es_data_04_data:
+  es_data_04_logs:
   es_coordinating_node_01_data:
+  es_coordinating_node_01_logs:
 
 networks:
   es-docker-cluster_01:
