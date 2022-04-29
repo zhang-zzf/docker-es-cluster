@@ -10,8 +10,6 @@ metricbeat.autodiscover:
       hints.enabled: true
 
 metricbeat.modules:
-- module: system
-  enabled: false
 - module: docker
   metricsets:
     - "container"
@@ -33,8 +31,10 @@ metricbeat.modules:
   period: 10s
   hosts: ["http://es_master_01:9200", "http://es_master_02:9200", "http://es_master_03:9200", "http://es_data_01:9200", "http://es_data_02:9200",  "http://es_data_03:9200",  "http://es_coordinating_node_01:9200"] 
 
-processors:
-  - add_cloud_metadata: ~
+- module: kibana
+  xpack.enabled: true
+  period: 10s
+  hosts: ["http://es_cluster_kibana_1:5601"]
 
 output.elasticsearch:
   hosts: '${ELASTICSEARCH_HOSTS:elasticsearch:9200}'

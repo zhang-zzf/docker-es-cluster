@@ -197,6 +197,8 @@ services:
       memlock:
         soft: -1
         hard: -1
+    volumes:
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
     networks:
       - es-docker-cluster_01
 
@@ -205,6 +207,7 @@ services:
     user: root
     volumes:
       - ./metricbeat/config/metricbeat.docker.yml:/usr/share/metricbeat/metricbeat.yml:ro
+      - ./metricbeat/config/modules.d/system.yml:/usr/share/metricbeat/modules.d/system.yml:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       ELASTICSEARCH_HOSTS: '["http://es_coordinating_node_01:9200"]'
