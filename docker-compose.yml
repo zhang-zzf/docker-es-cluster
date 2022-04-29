@@ -174,7 +174,7 @@ services:
       - discovery.seed_hosts=es_master_01,es_master_02,es_master_03
       - network.host=0.0.0.0
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
         soft: -1
@@ -197,6 +197,17 @@ services:
       memlock:
         soft: -1
         hard: -1
+    networks:
+      - es-docker-cluster_01
+
+  metricbeat:
+    image: docker.elastic.co/beats/metricbeat:7.10.2
+    user: root
+    volumes:
+      - ./metricbeat/config/metricbeat.docker.yml:/usr/share/metricbeat/metricbeat.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      ELASTICSEARCH_HOSTS: '["http://es_coordinating_node_01:9200"]'
     networks:
       - es-docker-cluster_01
 
