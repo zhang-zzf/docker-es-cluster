@@ -30,7 +30,8 @@ metricbeat.modules:
   #  - node_stats
   period: 10s
   hosts: ["http://es_master_01:9200", "http://es_master_02:9200", "http://es_master_03:9200", "http://es_data_01:9200", "http://es_data_02:9200",  "http://es_data_03:9200",  "http://es_coordinating_node_01:9200"] 
-
+  username: "elastic"
+  password: "8E78NY1mnfGvQJ6e7aHy"
 - module: kibana
   xpack.enabled: true
   period: 10s

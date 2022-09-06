@@ -89,3 +89,11 @@ discovery.seed_hosts: ["192.168.8.1", "192.168.8.2", "192.168.8.3"]
 # Require explicit names when deleting indices:
 #
 #action.destructive_requires_name: true
+
+# Enable Elasticsearch security featuresedit
+xpack.security.enabled: true
+xpack.security.transport.ssl.enabled: true
+xpack.security.transport.ssl.verification_mode: certificate
+xpack.security.transport.ssl.client_authentication: required
+xpack.security.transport.ssl.keystore.path: elastic-certificates.p12
+xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
