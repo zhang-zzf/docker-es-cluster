@@ -196,19 +196,19 @@ services:
     networks:
       - es-docker-cluster_01
 
-  metricbeat:
-    image: docker.elastic.co/beats/metricbeat:7.17.6
-    user: root
-    volumes:
-      - ./metricbeat/config/metricbeat.docker.yml:/usr/share/metricbeat/metricbeat.yml:ro
-      - ./metricbeat/config/modules.d/system.yml:/usr/share/metricbeat/modules.d/system.yml:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    environment:
-      ELASTICSEARCH_HOSTS: '["http://es_coordinating_node_01:9200"]'
-      ELASTICSEARCH_USERNAME: elastic
-      ELASTICSEARCH_PASSWORD: 8E78NY1mnfGvQJ6e7aHy
-    networks:
-      - es-docker-cluster_01
+  # metricbeat:
+  #   image: docker.elastic.co/beats/metricbeat:7.17.6
+  #   user: root
+  #   volumes:
+  #     - ./metricbeat/config/metricbeat.docker.yml:/usr/share/metricbeat/metricbeat.yml:ro
+  #     - ./metricbeat/config/modules.d/system.yml:/usr/share/metricbeat/modules.d/system.yml:ro
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #   environment:
+  #     ELASTICSEARCH_HOSTS: '["http://es_coordinating_node_01:9200"]'
+  #     ELASTICSEARCH_USERNAME: elastic
+  #     ELASTICSEARCH_PASSWORD: 8E78NY1mnfGvQJ6e7aHy
+  #   networks:
+  #     - es-docker-cluster_01
 
 
 volumes:
